@@ -25,10 +25,20 @@ self.addEventListener('install', e => {
       return cache.addAll([
         '/',
         '/index.html',
-        '/scripts/scripts.js',
+        '/scripts/app.js',
         '/views/main.html',
-        'scripts/vendor.js'
-        "/styles/vendor.css",
+        '/scripts/controllers/main.js',
+        '/services/transitFactory.js',
+        "/bower_components/jquery/dist/jquery.js",
+        "/bower_components/angular/angular.js",
+        "/bower_components/bootstrap/dist/js/bootstrap.js",
+        "/bower_components/angular-cookies/angular-cookies.js",
+        "/bower_components/angular-resource/angular-resource.js",
+        "/bower_components/angular-route/angular-route.js",
+        "/bower_components/angular-sanitize/angular-sanitize.js",
+        "/bower_components/angular-touch/angular-touch.js",
+        "/bower_components/lovefield/dist/lovefield.min.js",
+        "/bower_components/bootstrap/dist/css/bootstrap.css",
         "/styles/main.css",
         '/sw.js',
       ])
