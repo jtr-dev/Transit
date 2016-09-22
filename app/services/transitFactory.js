@@ -74,49 +74,6 @@
     });
 
 
-//  // Populate from AJAX:
-//     db.on('ready', function () {
-//       return db.calendar.count(function (count) {
-//         if (count < 0) {
-//           console.log("Already populated, 'gtfs' is already created at this domain.");
-//         } else {
-//           console.log("Database is empty. Populating from ajax call...");
-//           return new Dexie.Promise(function (resolve, reject) {
-
-//             gtfs.forEach(function (name, index) {
-//               var url = 'gtfs/' + name + '.txt';
-//               $.ajax(url, {
-//                 async: false,
-//                 type: 'get',
-//                 dataType: 'text',
-//                 error: function (xhr, textStatus) {
-//                   reject(textStatus);
-//                 },
-//                 success: function (data) {
-
-
-//                   var result = csvJSON(data);
-//                   var res = JSON.parse(result);
-//                   console.log("Got ajax response. We'll now add the objects.");
-
-
-//                   return db.transaction('rw', db[name], function () {
-//                     res.forEach(function (item) {
-//                       // console.log("Adding object: " + JSON.stringify(item));
-//                       db[name].bulkPut(item);
-//                     })
-//                   })
-//                 }
-//               })
-//             })
-//           }).then(function () {
-//             console.log("Transaction committed");
-//           });
-//         }
-//       });
-//     });
-
-
     return transit;
 
   }
