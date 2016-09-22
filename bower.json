@@ -9,7 +9,7 @@
     "angular-route": "^1.4.0",
     "angular-sanitize": "^1.4.0",
     "angular-touch": "^1.4.0",
-    "lovefield": "2.1.9"
+    "dexie": "1.4.3-rc"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.0"
