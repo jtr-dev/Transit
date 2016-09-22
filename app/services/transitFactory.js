@@ -18,7 +18,7 @@
     ];
 
 
-    function csvJSON(csv) {
+    function parseCSV(csv) {
       var lines = csv.split("\n");
       var result = [];
       var headers = lines[0].split(",");
@@ -30,7 +30,7 @@
         }
         result.push(obj);
       }
-      return JSON.stringify(result); //JSON
+      return result; // No need to make it JSON
     }
 
 
@@ -52,15 +52,16 @@
           console.log("Already populated, 'gtfs' is already created at this domain.");
         } else {
           console.log("Database is empty. Populating from ajax call...");
-          return Dexie.Promise.all (gtfs.map(name => Dexie.Promise.resolve($.ajax('gtfs/' + name + '.txt', {
-            dataType: 'text'
-          })).then(data => {
+          return Dexie.Promise.all (gtfs.map(name => new Dexie.Promise((resolve, reject) => {
+            $.ajax('gtfs/' + name + '.txt', {
+              dataType: 'text'
+            }).then(resolve, reject);
+          }).then(data => {
             console.log("Got ajax response for " + name);
-            return JSON.parse(csvJSON(data));
+            return parseCSV(data);
           }).then(res => {
-            res.map(item => {
-              return db[name].bulkPut(item);
-            })
+            console.log("Bulk putting " + res.length + " " + name + " records into database");
+            return db[name].bulkPut(res);
           }).then(()=>{
             console.log("Done importing " + name);
           }))).then(()=>{
