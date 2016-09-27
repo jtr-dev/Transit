@@ -7,7 +7,7 @@
   function transitFactory() {
 
     var transit = new Dexie('gtfs');
-    
+
 
     var gtfs = [
       'calendar',
@@ -52,7 +52,7 @@
           console.log("Already populated, 'gtfs' is already created at this domain.");
         } else {
           console.log("Database is empty. Populating from ajax call...");
-          return Dexie.Promise.all (gtfs.map(name => new Dexie.Promise((resolve, reject) => {
+          return Dexie.Promise.all(gtfs.map(name => new Dexie.Promise((resolve, reject) => {
             $.ajax('gtfs/' + name + '.txt', {
               dataType: 'text'
             }).then(resolve, reject);
@@ -62,9 +62,9 @@
           }).then(res => {
             console.log("Bulk putting " + res.length + " " + name + " records into database");
             return db[name].bulkPut(res);
-          }).then(()=>{
+          }).then(() => {
             console.log("Done importing " + name);
-          }))).then(()=>{
+          }))).then(() => {
             console.log("All files successfully imported");
           }).catch(err => {
             console.error("Error importing data: " + (err.stack || err));
@@ -73,6 +73,95 @@
         }
       });
     });
+
+
+    db.searchTimes = function (departure, arrival) {
+      let arr = [];
+      db.stops.where("stop_name").startsWithAnyOfIgnoreCase(departure, arrival).toArray().then(res => {
+        res.map(r => {
+          db.stop_times.where("stop_id").startsWithAnyOf(r.stop_id).toArray().then(res => {
+            res.map(r => {
+              arr.push(r.trip_id)
+            })
+          })
+        })
+        console.table(arr)
+          // var sorted_arr = arr.slice().sort(); 
+          // var results = [];
+          // for (var i = 0; i < arr.length - 1; i++) {
+          //   if (sorted_arr[i + 1] == sorted_arr[i]) {
+          //     results.push(sorted_arr[i]);
+          //   }
+          // }
+
+          // console.table(results);
+      })
+    }
+
+
+    // db.searchTimes = function (departure, arrival) {
+    //   let stopTimeIds = [];
+    //   let sharedStopId = [];
+    //   let sharedNameInStopId = [];
+    //   let tripsWithsharedStopId = [];
+    //   db.stops.where("stop_name").startsWithAnyOfIgnoreCase(departure, arrival).toArray().then(res => {
+    //     res.map(r => {
+    //       stopTimeIds.push(r.stop_id);
+    //     })
+    //       db.stop_times.where("stop_id").startsWithAnyOf(stopTimeIds).toArray().then(res => {
+    //         res.map(r => {
+    //           sharedStopId.push(r.stop_id)
+    //         })
+    //         db.stops.where("stop_id").startsWithAnyOf(sharedStopId).toArray().then(res => {
+    //           res.map(r => {
+    //             sharedNameInStopId.push(r.stop_id);
+    //           })
+    //           db.stop_times.where("stop_id").startsWithAnyOf(sharedNameInStopId).toArray().then(res =>{
+    //             res.map(r =>{
+    //               tripsWithsharedStopId.push(r)
+    //             })
+    //           })
+    //         })
+    //       })
+    //       console.table(tripsWithsharedStopId)
+
+    //   });
+
+
+
+    // db.searchTimes = function (departure, arrival) {
+    //   let stopTimeIds = [];
+    //   let sharedStopId = [];
+    //   let sharedNameInStopId = [];
+    //   let sharedTripId = [];
+    //   db.stops.where("stop_name").startsWithAnyOfIgnoreCase(departure, arrival).toArray().then(res => {
+    //       console.log(res)
+
+    //     res.map(r => {
+    //       stopTimeIds.push(r.stop_id);
+    //     })
+    //     // db.stop_times.where("stop_id").startsWithAnyOf(stopTimeIds).toArray().then(res => {
+    //     db.stops.where("stop_id").startsWithAnyOf(stopTimeIds).toArray().then(res => {
+    //       res.map(r => {
+    //         sharedStopId.push(r.stop_id)
+    //       })
+    //       // console.log(sharedStopId)
+    //       db.stop_times.where("stop_id").startsWithAnyOf(sharedStopId).toArray().then(res => {
+    //         res.map(r => {
+    //           // console.log(r)
+    //         })
+    //       })
+    //     })
+    //   });
+    // db.stops.where("stop_name").startsWithAnyOfIgnoreCase(departure, arrival).toArray().then(res => {
+    //   res.map(r => {
+    //     stopTimeIds.push(r.stop_id);
+    //   })
+    //   console.log(stopTimeIds)
+    //   db.stop_times.where("stop_id").startsWithAnyOf(stopTimeIds).toArray().then(res => {
+    //     console.log(res);
+    //   })
+    // })
 
 
     return transit;

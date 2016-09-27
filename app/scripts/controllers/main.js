@@ -1,9 +1,9 @@
 'use strict';
-(function(global) {
+(function (global) {
   /*
     Methods for Controller
   */
-  function MainController ($scope, transit) {
+  function MainController($scope, transit) {
     var vm = $scope;
 
     vm.hello = 'Hello World';
@@ -12,10 +12,57 @@
     vm.results = [];
     vm.selectDeparture = vm.departureStop[0];
     vm.selectArrival = vm.arrivalStop[0];
+    var ct = transit;
 
-    // console.log(transit.friends);
-    // console.log( transit ) 
-    transit.open();
+    ct.open();
+
+    // Get Station Names 
+    ct.stops
+      .where("stop_name").between(0, "Z")
+      .toArray()
+      .then(res => {
+        let names = [];
+        let uniqueNames = [];
+        res.map(r => {
+          names.push(r.stop_name);
+          $.each(names, function (i, el) {
+            if ($.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
+          });
+        });
+        vm.arrivalStop = uniqueNames;
+        vm.departureStop = uniqueNames;
+      });
+
+    vm.findStn = function (d, a) {      
+      if (d && a){
+        vm.selectDeparture = d;
+        vm.selectArrival = a;
+        vm.err = false;
+        console.log(d, a)
+        ct.searchTimes(d, a)
+      }
+      if(d === a){
+        vm.err = true;
+        vm.error = 'The Departure and Arrival Stations must be different';
+        return;
+      }
+    };
+
+    function find(key, array) {
+      // The variable results needs var in this case (without 'var' a global variable is created)
+      var results = [];
+      for (var i = 0; i < array.length; i++) {
+        if (array[i].indexOf(key) == 0) {
+          results.push(array[i]);
+        }
+      }
+      return results;
+    }
+
+
+
+    ct.searchTimes("22nd St Caltrain", "Bayshore Caltrain")
+
 
 
 
