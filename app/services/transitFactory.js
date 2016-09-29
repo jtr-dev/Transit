@@ -77,24 +77,39 @@
 
     db.searchTimes = function (departure, arrival) {
       let arr = [];
+      var results = [];
       db.stops.where("stop_name").startsWithAnyOfIgnoreCase(departure, arrival).toArray().then(res => {
         res.map(r => {
           db.stop_times.where("stop_id").startsWithAnyOf(r.stop_id).toArray().then(res => {
             res.map(r => {
               arr.push(r.trip_id)
             })
+              var sorted_arr = arr.slice().sort(); // You can define the comparing function here. 
+              // JS by default uses a crappy string compare.
+              // (we use slice to clone the array so the
+              // original array won't be modified)
+              for (var i = 0; i < arr.length - 1; i++) {
+                if (sorted_arr[i + 1] == sorted_arr[i]) {
+                  results.push(sorted_arr[i]);
+                }
+              }
           })
         })
         console.table(arr)
-          // var sorted_arr = arr.slice().sort(); 
-          // var results = [];
-          // for (var i = 0; i < arr.length - 1; i++) {
-          //   if (sorted_arr[i + 1] == sorted_arr[i]) {
-          //     results.push(sorted_arr[i]);
-          //   }
-          // }
+        console.log(results);
 
-          // console.table(results);
+
+
+
+        // var sorted_arr = arr.slice().sort(); 
+        // var results = [];
+        // for (var i = 0; i < arr.length - 1; i++) {
+        //   if (sorted_arr[i + 1] == sorted_arr[i]) {
+        //     results.push(sorted_arr[i]);
+        //   }
+        // }
+
+        // console.table(results);
       })
     }
 
