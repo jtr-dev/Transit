@@ -14,7 +14,10 @@
     vm.selectArrival = vm.arrivalStop[0];
     var ct = transit;
 
+
     ct.open();
+    
+
 
     // Get Station Names 
     ct.stops
@@ -59,11 +62,15 @@
       return results;
     }
 
-
-
-    ct.searchTimes("22nd St Caltrain", "Bayshore Caltrain")
-
-
+    vm.stop_times = ct.getAllStopTimes();
+    console.table(vm.stop_times)
+    
+    vm.pointA = ct.getPointAResults('22nd St Caltrain');
+    vm.pointB = ct.getPointBResults('Bayshore Caltrain');
+    // console.table(vm.pointA)
+    // console.table(vm.pointB)
+    // ct.searchTimes("22nd St Caltrain", "Bayshore Caltrain")
+    
 
 
   }

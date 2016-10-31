@@ -75,43 +75,84 @@
     });
 
 
-    db.searchTimes = function (departure, arrival) {
-      let arr = [];
+
+
+
+    db.getPointAResults = function (departure) {
+      var arr = [];
       var results = [];
-      db.stops.where("stop_name").startsWithAnyOfIgnoreCase(departure, arrival).toArray().then(res => {
+      db.stops.where("stop_name").startsWithAnyOfIgnoreCase(departure).toArray().then(res => {
         res.map(r => {
           db.stop_times.where("stop_id").startsWithAnyOf(r.stop_id).toArray().then(res => {
             res.map(r => {
               arr.push(r.trip_id)
             })
-              var sorted_arr = arr.slice().sort(); // You can define the comparing function here. 
-              // JS by default uses a crappy string compare.
-              // (we use slice to clone the array so the
-              // original array won't be modified)
-              for (var i = 0; i < arr.length - 1; i++) {
-                if (sorted_arr[i + 1] == sorted_arr[i]) {
-                  results.push(sorted_arr[i]);
-                }
-              }
           })
         })
-        console.table(arr)
-        console.log(results);
+      })
+      return arr;
+    };
+
+    db.getPointBResults = function (arrival) {
+      var arr = [];
+      var results = [];
+      db.stops.where("stop_name").startsWithAnyOfIgnoreCase(arrival).toArray().then(res => {
+        res.map(r => {
+          db.stop_times.where("stop_id").startsWithAnyOf(r.stop_id).toArray().then(res => {
+            res.map(r => {
+              arr.push(r.trip_id)
+            })
+          })
+        })
+      })
+      return arr;
+    };
 
 
-
-
-        // var sorted_arr = arr.slice().sort(); 
-        // var results = [];
-        // for (var i = 0; i < arr.length - 1; i++) {
-        //   if (sorted_arr[i + 1] == sorted_arr[i]) {
-        //     results.push(sorted_arr[i]);
-        //   }
-        // }
-
-        // console.table(results);
+    db.getAllStopTimes = function(){
+      db.stop_times.orderBy('id').toArray()
+      .then(res => {
+          return res
       })
     }
+
+
+    // db.searchTimes = function (departure, arrival) {
+    //   var arr = [];
+    //   var results = [];
+    //   db.stops.where("stop_name").startsWithAnyOfIgnoreCase(departure, arrival).toArray().then(res => {
+    //     res.map(r => {
+    //       db.stop_times.where("stop_id").startsWithAnyOf(r.stop_id).toArray().then(res => {
+    //         res.map(r => {
+    //           arr.push(r.trip_id)
+    //         })
+    //       })
+    //     })
+    //         var sorted_arr = arr.slice().sort(); 
+    //           for (var i = 0; i < arr.length - 1; i++) {
+    //             if (sorted_arr[i + 1] == sorted_arr[i]) {
+    //               results.push(sorted_arr[i]);
+    //               // TODO: backtrack and get a specific date. Or display date,  times for both stations should be present for each trip_id 
+    //               // 1 trip id =  2 times for 2 stations.   
+    //             }
+    //           }
+    //     console.table(arr)
+    //     console.log(results);
+    //   })
+    // }
+
+
+
+
+    // var sorted_arr = arr.slice().sort(); 
+    // var results = [];
+    // for (var i = 0; i < arr.length - 1; i++) {
+    //   if (sorted_arr[i + 1] == sorted_arr[i]) {
+    //     results.push(sorted_arr[i]);
+    //   }
+    // }
+
+    // console.table(results);
 
 
     // db.searchTimes = function (departure, arrival) {
