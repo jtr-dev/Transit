@@ -1,40 +1,40 @@
 <div class="jumbotron">
-  <h3>
-    Transit times <span ng-show="selected"> for </span><span style="color: red; font-weight: bold">{{selectDeparture}}</span> <span ng-show="selected"> to </span> <span style="color: blue; font-weight: bold">{{selectArrival}}</span>
-  </h3>
-  <div ng-show="err">
-    <p class="error-msg">{{error}}</p>
-  </div>
-  <div class="col-md-12" >
-    <div class="col-md-6" >
-      <select class="form-control" ng-model="selectDeparture" ng-click="findStn(selectDeparture, selectArrival)" ng-options="d for d in departureStop"></select>
-    </div>
-    <div class="col-md-6">
-      <select class="form-control" ng-model="selectArrival" ng-click="findStn(selectDeparture, selectArrival)" ng-options="a for a in arrivalStop"></select>
-    </div>
-  </div>
+	<h3>
+		Transit times <span ng-show="selected"> for </span><span style="color: red; font-weight: bold">{{selectDeparture}}</span>		<span ng-show="selected"> to </span> <span style="color: blue; font-weight: bold">{{selectArrival}}</span>
+	</h3>
+	<div ng-show="err">
+		<p class="error-msg">{{error}}</p>
+	</div>
+	<div class="col-md-12">
+		<div class="col-md-6">
+			<select class="form-control" ng-model="selectDeparture" ng-click="findbtn(selectArrival, selectDeparture)" ng-options="d for d in departureStop"></select>
+		</div>
+		<div class="col-md-6">
+			<select class="form-control" ng-model="selectArrival" ng-click="findbtn(selectArrival, selectDeparture)" ng-options="a for a in arrivalStop"></select>
+		</div>
+	</div>
 </div>
 
 
 <table class="table">
-  <thead class="thead-inverse">
-    <tr >
-      <th>
-        Departure
-      </th>
-      <th>
-        Arrival
-      </th>
-      <th>
-        Duration
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="r in results track by $index">
-      <td>{{r.departure}}</td>
-      <td>{{r.arrival}}</td>
-      <td>{{r.duration}}</td>
-    </tr>
-  </tbody>
+	<thead class="thead-inverse">
+		<tr>
+			<th>
+				Departure
+			</th>
+			<th>
+				Arrival
+			</th>
+			<th>
+				Duration
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="r in results.departure track by $index">
+			<td>{{r.departure_time | date:'short'}}</td>
+			<td>{{results.arrival[$index].arrival_time | date:'short'}}</td>
+		</tr>
+	</tbody>
 </table>
+
