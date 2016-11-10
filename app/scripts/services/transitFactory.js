@@ -7,7 +7,7 @@
   function transitFactory() {
 
     var transit = new Dexie('gtfs');
-    
+
 
     var gtfs = [
       'calendar',
@@ -16,6 +16,7 @@
       'stops',
       'trips'
     ];
+
 
 
     function parseCSV(csv) {
@@ -52,7 +53,7 @@
           console.log("Already populated, 'gtfs' is already created at this domain.");
         } else {
           console.log("Database is empty. Populating from ajax call...");
-          return Dexie.Promise.all (gtfs.map(name => new Dexie.Promise((resolve, reject) => {
+          return Dexie.Promise.all(gtfs.map(name => new Dexie.Promise((resolve, reject) => {
             $.ajax('gtfs/' + name + '.txt', {
               dataType: 'text'
             }).then(resolve, reject);
@@ -62,9 +63,9 @@
           }).then(res => {
             console.log("Bulk putting " + res.length + " " + name + " records into database");
             return db[name].bulkPut(res);
-          }).then(()=>{
+          }).then(() => {
             console.log("Done importing " + name);
-          }))).then(()=>{
+          }))).then(() => {
             console.log("All files successfully imported");
           }).catch(err => {
             console.error("Error importing data: " + (err.stack || err));
@@ -73,6 +74,64 @@
         }
       });
     });
+
+
+
+
+    db.getAllStopTimes = function () {
+      var arr = [];
+      db.stop_times.orderBy('id').toArray()
+        .then(res => {
+          return arr.push(res);
+        }).then(() => {
+          console.log(arr)
+        }).catch(err => {
+          console.log("Exception thrown: " + (err.stack || err));
+          throw err;
+        })
+      return arr;
+    }
+
+    db.searchDepartureTimes = function (departure) {
+      var departureTimes = [];
+      db.stops.where("stop_name").startsWithAnyOfIgnoreCase(departure).toArray().then(res => {
+        res.forEach(r => {
+          db.stop_times.where("stop_id").startsWithAnyOf(r.stop_id).toArray().then(res => {
+            res.map(r => {
+              departureTimes.push(r)
+            })
+          })
+        })
+      }).then(() => {
+        console.log(departureTimes);
+      }).catch(err => {
+        console.log(err.stack);
+        return err;
+      })
+      return departureTimes;
+    }
+
+    db.searchArrivalTimes = function (arrival) {
+      var arrivalTimes = [];
+      db.stops.where("stop_name").startsWithAnyOfIgnoreCase(arrival).toArray().then(res => {
+        res.forEach(r => {
+          db.stop_times.where("stop_id").startsWithAnyOf(r.stop_id).toArray().then(res => {
+            res.map(r => {
+              arrivalTimes.push(r)
+            })
+          })
+        })
+      }).then(() => {
+        // console.log(arrivalTimes.length);
+      }).catch(err => {
+        console.log(err.stack);
+        return err;
+      })
+      return arrivalTimes;
+    }
+
+
+
 
 
     return transit;

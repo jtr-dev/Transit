@@ -8,7 +8,7 @@
 // 'test/spec/**/*.js'
 
 module.exports = function (grunt) {
-
+grunt.loadNpmTasks('grunt-angular-templates');
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
@@ -174,7 +174,7 @@ module.exports = function (grunt) {
     postcss: {
       options: {
         processors: [
-          require('autoprefixer-core')({browsers: ['last 1 version']})
+          require('autoprefixer-core')({ browsers: ['last 1 version'] })
         ]
       },
       server: {
@@ -202,23 +202,23 @@ module.exports = function (grunt) {
     wiredep: {
       app: {
         src: ['<%= yeoman.app %>/index.html'],
-        ignorePath:  /\.\.\//
+        ignorePath: /\.\.\//
       },
       test: {
         devDependencies: true,
         src: '<%= karma.unit.configFile %>',
-        ignorePath:  /\.\.\//,
-        fileTypes:{
+        ignorePath: /\.\.\//,
+        fileTypes: {
           js: {
             block: /(([\s\t]*)\/{2}\s*?bower:\s*?(\S*))(\n|\r|.)*?(\/{2}\s*endbower)/gi,
-              detect: {
-                js: /'(.*\.js)'/gi
-              },
-              replace: {
-                js: '\'{{filePath}}\','
-              }
+            detect: {
+              js: /'(.*\.js)'/gi
+            },
+            replace: {
+              js: '\'{{filePath}}\','
             }
           }
+        }
       }
     },
 
@@ -233,6 +233,7 @@ module.exports = function (grunt) {
         ]
       }
     },
+
 
     // Reads HTML for usemin blocks to enable smart builds that automatically
     // concat, minify and revision files. Creates configurations in memory so
@@ -283,18 +284,57 @@ module.exports = function (grunt) {
     //     }
     //   }
     // },
-    // uglify: {
-    //   dist: {
+    uglify: {
+      dist: {
+        files: {
+          '<%= yeoman.dist %>/scripts/scripts.js': '<%= yeoman.dist %>/scripts/app.js'
+        }
+      }
+    },
+    concat: {
+       options: {
+            sourceMap: true
+        },
+        js: {
+            src: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
+            dest: '<%= yeoman.dist %>/scripts/scripts.js'
+        },
+    },
+
+
+
+     babel: {
+            dist: {
+                options: {
+                    sourceMap: true
+                },
+                src: [
+                    'dist/scripts/scripts.js',
+                ],
+              dest: 'dist/scripts/app.js'
+
+            }
+    },
+    
+    // traceur: {
+    //   custom: {
     //     files: {
-    //       '<%= yeoman.dist %>/scripts/scripts.js': [
-    //         '<%= yeoman.dist %>/scripts/scripts.js'
-    //       ]
+    //       'build/': ['<%= yeoman.app %>/scripts/{,*/}*.js']
     //     }
     //   }
     // },
-    // concat: {
-    //   dist: {}
-    // },
+    
+    transpile: {
+      main: {
+        type: "rjs", // or "cjs" for CommonJS
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.app %>/lib/',
+          src: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
+          dest: '<%= yeoman.app %>/tmp/'
+        }]
+      }
+    },
 
     imagemin: {
       dist: {
@@ -335,12 +375,12 @@ module.exports = function (grunt) {
       }
     },
 
-    ngtemplates: {
+  ngtemplates: {
       dist: {
         options: {
           module: 'app',
           htmlmin: '<%= htmlmin.dist.options %>',
-          usemin: 'scripts/scripts.js'
+          usemin: 'dist/vendors.js' 
         },
         cwd: '<%= yeoman.app %>',
         src: 'views/{,*/}*.html',
@@ -379,6 +419,7 @@ module.exports = function (grunt) {
           src: [
             '*.{ico,png,txt}',
             '*.html',
+            'views/{,*/}*.html',
             'images/{,*/}*.{webp}',
             'styles/fonts/{,*/}*.*',
             'gtfs/*',
@@ -464,8 +505,9 @@ module.exports = function (grunt) {
     'useminPrepare',
     'concurrent:dist',
     'postcss',
-    'ngtemplates',
     'concat',
+    'babel',
+    'ngtemplates',
     'ngAnnotate',
     'copy:dist',
     'cdnify',
