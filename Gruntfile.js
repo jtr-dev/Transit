@@ -8,7 +8,7 @@
 // 'test/spec/**/*.js'
 
 module.exports = function (grunt) {
-
+grunt.loadNpmTasks('grunt-angular-templates');
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
@@ -298,7 +298,7 @@ module.exports = function (grunt) {
         js: {
             src: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
             dest: '<%= yeoman.dist %>/scripts/scripts.js'
-        }
+        },
     },
 
 
@@ -316,13 +316,13 @@ module.exports = function (grunt) {
             }
     },
     
-    traceur: {
-      custom: {
-        files: {
-          'build/': ['<%= yeoman.app %>/scripts/{,*/}*.js']
-        }
-      }
-    },
+    // traceur: {
+    //   custom: {
+    //     files: {
+    //       'build/': ['<%= yeoman.app %>/scripts/{,*/}*.js']
+    //     }
+    //   }
+    // },
     
     transpile: {
       main: {
@@ -375,12 +375,12 @@ module.exports = function (grunt) {
       }
     },
 
-    ngtemplates: {
+  ngtemplates: {
       dist: {
         options: {
           module: 'app',
           htmlmin: '<%= htmlmin.dist.options %>',
-          usemin: 'scripts/scripts.js'
+          usemin: 'dist/vendors.js' 
         },
         cwd: '<%= yeoman.app %>',
         src: 'views/{,*/}*.html',
@@ -419,6 +419,7 @@ module.exports = function (grunt) {
           src: [
             '*.{ico,png,txt}',
             '*.html',
+            'views/{,*/}*.html',
             'images/{,*/}*.{webp}',
             'styles/fonts/{,*/}*.*',
             'gtfs/*',
@@ -504,9 +505,9 @@ module.exports = function (grunt) {
     'useminPrepare',
     'concurrent:dist',
     'postcss',
-    'ngtemplates',
     'concat',
     'babel',
+    'ngtemplates',
     'ngAnnotate',
     'copy:dist',
     'cdnify',
