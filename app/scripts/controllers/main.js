@@ -42,7 +42,6 @@
         vm.error = 'The Departure and Arrival Stations must be different';
         return;
       } else {
-        // var results = ct.searchDepartureTimes(d)
         var departureResults = ct.searchDepartureTimes(d)
         var arrivalResults = ct.searchArrivalTimes(a)
         setTimeout(function () {
@@ -96,13 +95,56 @@
           }
         })
       })
+       setTimeout(function () {
+      vm.results.duration = duration(dep_time, arr_time)
       vm.results.departure = dep_time
       vm.results.arrival = arr_time
-      $scope.$apply('results', function (newVal, oldVal) {
+      $scope.$apply('results', (newVal, oldVal) => {
         vm.results = newVal;
       });
+       }, 1000)
       console.log(vm.results)
     }
+
+
+    function duration(departure, arrival) {
+      var result = [];
+
+
+      departure.forEach((value, index) => {
+        
+        var t1 = new Date();
+        var parts = value.departure_time.split(":");
+        t1.setHours(parts[0], parts[1], parts[2], 0);
+        var t2 = new Date();
+        parts = arrival[index].arrival_time.split(":");
+        t2.setHours(parts[0], parts[1], parts[2], 0);
+
+        var millisec = parseInt(Math.abs(t1.getTime() - t2.getTime()));
+
+        var seconds = (millisec / 1000).toFixed(1);
+        var minutes = (millisec / (1000 * 60)).toFixed(1);
+        var hours = (millisec / (1000 * 60 * 60)).toFixed(1);
+        var days = (millisec / (1000 * 60 * 60 * 24)).toFixed(1);
+
+        if (seconds < 60) {
+          result.push(seconds + " Sec");
+        } else if (minutes < 60) {
+          result.push(minutes + " Min");
+        } else if (hours < 24) {
+          result.push(hours + " Hrs");
+        } else {
+          result.push(days + " Days");
+        }
+      })
+      return result;
+    }
+
+
+    // console.log(vm.duration('6:29:00', '6:35:00'))
+
+
+
 
 
     // Get Station Names 

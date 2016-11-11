@@ -34,6 +34,7 @@
 		<tr ng-repeat="r in results.departure track by $index">
 			<td>{{r.departure_time | date:'short'}}</td>
 			<td>{{results.arrival[$index].arrival_time | date:'short'}}</td>
+			<td>{{results.duration[$index]}}</td>
 		</tr>
 	</tbody>
 </table>
