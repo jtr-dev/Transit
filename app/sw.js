@@ -23,12 +23,17 @@ self.addEventListener('install', e => {
   e.waitUntil(
     caches.open('transitServiceWorker').then(cache => {
       return cache.addAll([
-        '/',
-        '/sw.js',
+      '/',
         '/index.html',
+        // '/scripts/vendor.js',
+        // '/scripts/app.js',
+        '/scripts/vendor.d9e96e71.js',
+        '/scripts/app.253bcfd8.js',
+        '/styles/vendor.1148a0ca.css',
+        '/styles/main.16c86e60.css',
+        // '/scripts/scripts.f7837663.js',
         '/views/main.html',
-        '/scripts/',
-        '/styles/'
+        'sw.js'
       ])
       .then(() => self.skipWaiting());
     })
