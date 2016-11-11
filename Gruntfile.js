@@ -513,7 +513,6 @@ grunt.loadNpmTasks('grunt-angular-templates');
     'cdnify',
     'cssmin',
     'uglify',
-    'filerev',
     'usemin',
     'htmlmin'
   ]);

@@ -25,13 +25,10 @@ self.addEventListener('install', e => {
       return cache.addAll([
       '/',
         '/index.html',
-        // '/scripts/vendor.js',
-        // '/scripts/app.js',
-        '/scripts/vendor.d9e96e71.js',
-        '/scripts/app.9ccf96f3.js',
-        '/styles/vendor.1148a0ca.css',
-        '/styles/main.16c86e60.css',
-        // '/scripts/scripts.f7837663.js',
+        '/scripts/vendor.js',
+        '/styles/vendor.css',
+        '/styles/main.css',
+        '/scripts/app.js',
         '/views/main.html',
         'sw.js'
       ])
